@@ -33,17 +33,15 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
      pip install -r requirements.txt
      ```
 
+3. **Execution**:
+   - Create a script and happy coding! 😊
+
 ### ☁️ Google Colab
 
-For an optimized experience, it's recommended to use Google Colab:
-
-1. **Mount the Repository**:
-   - Upload the respository directory to your Google Drive.
-
-2. **Run in Colab**:
-   - Open the notebook in Google Colab.
-   - Connect to a TPU for enhanced performance.
-   - Execute the cells sequentially to run the project.
+- Go to [Google Colab](https://colab.research.google.com/) and log in to your account.
+- Select the Github Option and enter the following URL: `https://github.com/MarinaFuster/cai-implementation`
+- Choose which notebook you would like to run.
+- Execute cells step by step. It is important that you clone the repository and then create the `.env` file as explained in the Local Setup section, inside the directory corresponding to the repository.
 
 ### ⏳ What to expect
 
