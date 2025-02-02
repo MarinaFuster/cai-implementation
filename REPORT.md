@@ -23,7 +23,7 @@ Below are comparisons of responses from different models when prompted with a ha
 This project is motivated by the following goals:
 - Reproducing the ideas from the *Constitutional AI* paper within available resources.
 - Organizing the code systematically so others can learn from the implementation.
-- Prioritizing the full pipeline implementation before refining results.
+- Prioritizing the full implementation before refining results.
 - Creating an open repository for continued improvements.
 - Gaining practical experience in fine-tuning large models, a crucial technique for AI alignment.
 
@@ -32,37 +32,34 @@ This project is motivated by the following goals:
 The original methodology was adapted due to model availability and computational limitations. The steps taken are as follows:
 
 1. **Select a Base Model**
-   - Instead of using Anthropic’s RLHF model, this project uses **Mistral 7B** fine-tuned for helpfulness. This model lacks built-in safety guardrails.
+   - Instead of using Anthropic’s RLHF model, this project uses **[Mistral 7B](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3)** fine-tuned for helpfulness. This model lacks built-in safety guardrails.
    - Fine-tuning is performed using **LoRA** to reduce computational cost.
 
 2. **Generate Revised Responses**
-   - The critique-revision process follows a single-step approach.
-   - Revised responses are generated using:
-     - **Alternative 1:** The same Mistral 7B model.
-     - **Alternative 2:** A more capable model for critique and revision.
-   - Few-shot examples are included to clarify the critique role.
+   - The critique-revision process follows a multi-step approach in the original paper: after receiving a prompt, the model must critique the answer and then revise the response based on its critique.
+   - In the original paper, few-shot examples are included to clarify the different roles involved in creating the revisions.
+   - In this implementation, an example was created to understand the process; however, for training purposes, a pre-existing dataset is used.
 
 3. **Supervised Fine-Tuning (SFT)**
-   - The model is fine-tuned on revised responses from the last critique-revision step.
+   - The model is fine-tuned on revised responses from the final critique-revision step.
    - Helpful responses are incorporated to maintain assistance capabilities.
 
 4. **Direct Preference Optimization (DPO)**
-   - Instead of reinforcement learning, DPO is used due to dataset availability and ease of implementation.
-   - A preference model is trained to optimize responses based on constitutional principles.
+   - Instead of reinforcement learning with a preference model, DPO is used due to dataset availability and ease of implementation.
 
 # 🏗️ Implementation
 
 The codebase is structured as follows:
 
 - **`critique_flow.ipynb`**
-  - Demonstrates the critique-revision response flow using pre-existing datasets from Hugging Face.
+  - Demonstrates the critique-revision response flow described in the original paper.
   - Not required for SFT or DPO but useful for understanding the dataset creation process.
 
 - **`constitutional_training.ipynb`**
   - Implements the full training pipeline using:
     - `dataset_manager.py` for dataset processing.
-    - `model_manager.py` for model loading and training.
-  - Stores final results in a specified directory.
+    - `model_manager.py` for model and tokenizer loading.
+  - Stores final results in a specified directory, after training.
 
 # 📊 Results
 
@@ -72,7 +69,7 @@ The revised response quality from Mistral 7B was suboptimal. Instead of providin
 
 ![Revised Response Example](./assets/revised_response.png)
 
-Future improvements could involve using a separate model for critique and revision.
+Future improvements could involve using a separate model for critique and revision. This is why the decision was made to use an existing [dataset for harmless prompts](https://huggingface.co/datasets/HuggingFaceH4/cai-conversation-harmless).
 
 ## Supervised Fine-Tuning
 
@@ -91,17 +88,16 @@ After fine-tuning, the model struggled to retain its helpfulness. Achieving the 
 # 🤔 Discussion
 
 - **Human Oversight Limitations:**
-  - As seen in code review processes, human evaluation is expensive and error-prone.
+  - As seen in code review processes, human evaluation is both expensive and error-prone. On the other hand, as models become more capable and humans increasingly rely on them, attention to detail diminishes for certain types of tasks.
   
 - **Challenges with Constitutional Principles:**
-  - The principles may be too generic, resulting in responses that cluster closely in embedding space.
-  - Future work could explore *Contextual CAI* to retrieve more relevant constitutional elements.
+  - The principles used in the paper may be too generic, resulting in responses that probably cluster closely in embedding space.
 
 - **Prompt Sensitivity:**
-  - The model’s behavior significantly changes based on prompt phrasing (e.g., using *"Human:"* before a query prompts a safer response).
+  - The model’s behavior significantly changes based on prompt phrasing (e.g., using *"Human:"* as the role before a query prompts a safer response).
 
 - **Training Difficulties:**
-  - Fine-tuning negatively impacted overall performance, highlighting the complexity of maintaining alignment without degrading helpfulness.
+  - Fine-tuning negatively impacted overall performance, highlighting the complexity of maintaining alignment without degrading helpfulness and pre-existing capabilities.
   - Limited computational resources prevented extensive hyperparameter tuning.
 
 - **Security Considerations:**
@@ -110,9 +106,15 @@ After fine-tuning, the model struggled to retain its helpfulness. Achieving the 
 # Conclusion
 
 Fine-tuning a model for constitutional AI proved more challenging than expected. However, this project lays the groundwork for future iterations. The next steps involve:
-- Improving the critique-revision flow.
-- Experimenting with different fine-tuning strategies.
-- Addressing the loss of helpfulness in DPO training.
+- Addressing the loss of capabilities in SFT training.
+- Achieving comparable results with the paper for smaller models.
+
+What was actually achieved?
+- Reproducing the ideas from the *Constitutional AI* paper within available resources. 🟡
+- Organizing the code systematically so others can learn from the implementation. 🟢
+- Prioritizing the full implementation before refining results. 🟢
+- Creating an open repository for continued improvements. 🟢
+- Gaining practical experience in fine-tuning large models, a crucial technique for AI alignment. 🔴
 
 # 📚 References
 
