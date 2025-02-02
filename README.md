@@ -43,6 +43,11 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
 - Choose which notebook you would like to run.
 - Execute cells step by step. It is important that you clone the repository and then create the `.env` file as explained in the Local Setup section, inside the directory corresponding to the repository.
 
+<video width="900" height="300" controls>
+    <source src="assets/colab_setup.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
 ### ⏳ What to expect
 
 Setting up the project in Google Colab is designed to be efficient, with minimal time required for configuration. The primary time investments are as follows:
