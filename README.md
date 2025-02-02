@@ -21,20 +21,16 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
    - Add the following line to the `.env` file:
      ```
      HF_TOKEN=your_hf_token_here
+      SFT_OUTPUT_DIR=your_output_directory_for_sft_model
+      DPO_OUTPUT_DIR=your_output_directory_for_dpo_model
      ```
-     Replace `your_hf_token_here` with the token you obtained.
+     Replace the variables with appropriate values.
 
 2. **Install Requirements**:
    - Ensure Python 3.11 is installed.
    - Install the necessary packages by running:
      ```bash
      pip install -r requirements.txt
-     ```
-
-3. **Run the Main Script**:
-   - Execute the entry point by running:
-     ```bash
-     python main.py
      ```
 
 ### ☁️ Google Colab
