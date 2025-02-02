@@ -1,6 +1,7 @@
-torch
-transformers
 accelerate
 bitsandbytes
-peft
 datasets
+peft
+python-dotenv
+torch
+transformers
