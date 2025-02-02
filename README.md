@@ -13,7 +13,7 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
 
 ## 🚀 Using the Project
 
-### 🖥️ Local Setup
+### 🖥️ Option A: Local Setup
 
 1. **Set Up `.env` File**:
    - Obtain a Hugging Face (HF) token by signing up at [Hugging Face](https://huggingface.co/join).
@@ -36,7 +36,7 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
 3. **Execution**:
    - Create a script and happy coding! 😊
 
-### ☁️ Google Colab
+### ☁️ Option B: Google Colab (Recommended)
 
 - Go to [Google Colab](https://colab.research.google.com/) and log in to your account.
 - Select the Github Option and enter the following URL: `https://github.com/MarinaFuster/cai-implementation`
