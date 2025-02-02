@@ -24,7 +24,7 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
       SFT_OUTPUT_DIR=your_output_directory_for_sft_model
       DPO_OUTPUT_DIR=your_output_directory_for_dpo_model
      ```
-     Replace the variables with appropriate values.
+     Replace the variables with appropriate values. Keep in mind both directories will be created if they do not exist, alognside its parents.
 
 2. **Install Requirements**:
    - Ensure Python 3.11 is installed.
@@ -43,8 +43,7 @@ For an optimized experience, it's recommended to use Google Colab:
 2. **Run in Colab**:
    - Open the notebook in Google Colab.
    - Connect to a TPU for enhanced performance.
-   - Execute the cells sequentially to run the project. 
-   - If running `constitutional_training.ipynb`, ensure the directories for writing sft and dpo models exist or change them.
+   - Execute the cells sequentially to run the project.
 
 ### ⏳ What to expect
 
