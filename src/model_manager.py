@@ -19,10 +19,14 @@ class ModelManager:
             model_dir (str, optional): Local directory for the model; if provided, overrides model_name.
         """
         model_reference = model_dir if model_dir else model_name
+        
         logger.info(f"Initializing ModelManager. Loading tokenizer from {model_reference}.")
         self.tokenizer = AutoTokenizer.from_pretrained(model_reference)
+        self.tokenizer.pad_token = self.tokenizer.eos_token
+        
         logger.info("Tokenizer loaded.")
         self._bnb_config = self._get_bnb_config()
+        
         logger.info(f"Loading model from {model_reference}.")
         self.model = AutoModelForCausalLM.from_pretrained(
             model_reference, 
@@ -45,7 +49,7 @@ class ModelManager:
             bnb_4bit_use_double_quant=True,
         )
 
-    def _tokenize_function(self, examples, max_length=512):
+    def tokenize_function(self, examples, max_length=512):
         """
         Tokenizes the provided dataset examples.
 
