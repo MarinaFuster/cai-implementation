@@ -1,6 +1,6 @@
 # 🛡️ CAI Implementation
 
-This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness from AI Feedback](https://arxiv.org/abs/2212.08073) paper, adapting its scale to a personal project.
+This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness from AI Feedback](https://arxiv.org/abs/2212.08073) paper, adapting its scale to a personal project. Reed the project report [here](https://github.com/MarinaFuster/cai-implementation/blob/main/REPORT.md).
 
 ## 🎯 Motivation
 
