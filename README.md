@@ -20,7 +20,7 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
    - Create a `.env` file in the root directory of the repository.
    - Add the following line to the `.env` file:
      ```
-     HF_TOKEN=your_hf_token_here
+      HF_TOKEN=your_hf_token_here
       SFT_OUTPUT_DIR=your_output_directory_for_sft_model
       DPO_OUTPUT_DIR=your_output_directory_for_dpo_model
      ```
