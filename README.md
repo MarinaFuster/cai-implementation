@@ -6,10 +6,10 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
 
 - **Learning**: Reproduce the ideas behind the paper, adapting the setup to resources available.
 - **Understanding**: Grasp the challenges in fine-tuning a model, a key technique in implementing alignment strategies for advanced models.
-- **Exploring AI Alignment**: Delve into one of the most prevalent techniques in the industry to align models—ensuring AI systems act in accordance with human intentions and values.
+- **Exploring AI Alignment**: Explore one of the most widely used techniques in the field of AI alignment—ensuring that AI systems behave in accordance with human intentions and values. This technique, known as Reinforcement Learning from Human Feedback (RLHF), has a variation in this paper called Reinforcement Learning from AI Feedback (RLAIF). While the base model undergoes an RLHF process, the constitution process applies a second iteration using RLAIF, though the steps are quite similar.
 - **Comparative Analysis**: Examine the advantages and disadvantages of the technique used here, which shares similarities with the original Reinforcement Learning from Human Feedback (RLHF) approach.
 - **Risk Assessment**: Investigate how this method addresses the risks studied in [BlueDot Impact's Alignment course](https://aisafetyfundamentals.com/alignment/), focusing on the ethical implications and safety concerns associated with AI deployment.
-- **Sharing**: Organize the code so others can learn from this experience.
+- **Sharing**: Structure the code in a way that others can easily learn from this experience, enabling them to use it as a foundation for future projects.
 
 ## 🚀 Using the Project
 
