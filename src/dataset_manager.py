@@ -220,18 +220,21 @@ class DatasetManager:
                     logger.info("Bypassing sample due to incorrect roles.")
         
         if stage == "prefs":
+            outputs = {}
+            chosen_responses = []
+            rejected_responses = []
             # Chosen-rejected message pairs
             for chosen, rejected in zip(sampled_dataset["chosen"], sampled_dataset["rejected"]):
                 chosen_ok = len(chosen) >= 2 and chosen[0]["role"] == "user" and chosen[1]["role"] == "assistant"
                 rejected_ok = len(rejected) >= 2 and rejected[0]["role"] == "user" and rejected[1]["role"] == "assistant"
                 if chosen_ok and rejected_ok:
                     inputs.append(chosen[0]["content"])
-                    outputs.append({
-                        'chosen': chosen[1]["content"],
-                        'rejected': rejected[1]["content"]
-                    })
+                    chosen_responses.append(chosen[1]["content"])
+                    rejected_responses.append(rejected[1]["content"])
                 else:
                     logger.info("Bypassing sample due to incorrect roles.")
+            outputs["chosen"] = chosen_responses
+            outputs["rejected"] = rejected_responses
 
-        logger.info(f"Extracted {len(inputs)} inputs and {len(outputs)} outputs.")
+        logger.info(f"Extracted {len(inputs)} inputs with its corresponding outputs.")
         return {'inputs': inputs, 'outputs': outputs}
