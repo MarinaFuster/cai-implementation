@@ -11,11 +11,10 @@ class DatasetManager:
     Loads and prepares datasets for SFT and preference training using harmful and helpful samples.
     """
     def __init__(self):
-        logger.info("Initializing DatasetManager. Loading datasets...")
-        self.harmless_dataset = load_dataset("HuggingFaceH4/cai-conversation-harmless")
-        self.sft_helpful_dataset = load_dataset("HuggingFaceH4/ultrachat_200k")
-        self.prefs_helpful_dataset = load_dataset("HuggingFaceH4/ultrafeedback_binarized")
-        logger.info("Datasets loaded.")
+        self.harmless_dataset = None
+        self.sft_helpful_dataset = None
+        self.prefs_helpful_dataset = None
+        logger.info("Initialized DatasetManager.")
 
     def create_sft_train_dataset(
         self, 
@@ -37,6 +36,10 @@ class DatasetManager:
         Returns:
             Dataset: A HuggingFace Dataset with 'input_text' and 'output_text' fields.
         """
+        if self.harmless_dataset is None:
+            self.harmless_dataset = load_dataset("HuggingFaceH4/cai-conversation-harmless")
+            logger.info(f"Loaded harmless dataset: HuggingFaceH4/cai-conversation-harmless.")
+        
         sampled_harmless = self.harmless_dataset["train_sft"].shuffle(seed=seed).select(range(n_samples_harmless))
         harmless_inputs = sampled_harmless["init_prompt"]
         harmless_outputs = sampled_harmless["revision_response"]
@@ -107,7 +110,7 @@ class DatasetManager:
             Dataset: A HuggingFace Dataset with 'prompt', 'chosen', and 'rejected' fields.
         """
         harmless_samples = self._extract_inputs_and_outputs(
-            stage="dpo", safeguard="harmless", split="train", n_samples=n_samples_harmless, seed=seed
+            stage="prefs", safeguard="harmless", split="train", n_samples=n_samples_harmless, seed=seed
         )
         
         harmless_inputs = harmless_samples["inputs"]
@@ -115,7 +118,7 @@ class DatasetManager:
         harmless_rejected = harmless_samples["outputs"]["rejected"]
         
         helpful_samples = self._extract_inputs_and_outputs(
-            stage="dpo", safeguard="helpful", split="train", n_samples=n_samples_helpful, seed=seed
+            stage="prefs", safeguard="helpful", split="train", n_samples=n_samples_helpful, seed=seed
         )
         
         helpful_inputs = helpful_samples["inputs"]
@@ -186,6 +189,18 @@ class DatasetManager:
         
         if stage == "sft" and safeguard == "harmless":
             raise ValueError("Harmless dataset does not follow the format to extract with this method.")
+        
+        if safeguard == "harmless" and self.harmless_dataset is None:
+            self.harmless_dataset = load_dataset("HuggingFaceH4/cai-conversation-harmless")
+            logger.info(f"Loaded harmless dataset: HuggingFaceH4/cai-conversation-harmless.")
+        
+        if stage == "sft" and safeguard == "helpful" and self.sft_helpful_dataset is None:
+            self.sft_helpful_dataset = load_dataset("HuggingFaceH4/ultrachat_200k")
+            logger.info(f"Loaded helpful dataset: HuggingFaceH4/ultrachat_200k.")
+        
+        if stage == "prefs" and safeguard == "helpful" and self.prefs_helpful_dataset is None:
+            self.prefs_helpful_dataset = load_dataset("HuggingFaceH4/ultrafeedback_binarized")
+            logger.info(f"Loaded helpful dataset: HuggingFaceH4/ultrafeedback_binarized.")
 
         # Shuffle and select a subset of the dataset
         split_name = f"{split}_{stage}"
