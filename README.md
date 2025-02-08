@@ -23,8 +23,11 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
       HF_TOKEN=your_hf_token_here
       SFT_OUTPUT_DIR=your_output_directory_for_sft_model
       DPO_OUTPUT_DIR=your_output_directory_for_dpo_model
+      DATASETS_OUTPUT_DIR=your_datasets_directory # if you want to store or load datasets from this folder
      ```
      Replace the variables with appropriate values. Keep in mind both directories will be created if they do not exist, alognside its parents.
+
+     If you are using pre-existing datasets to train your model you should set up `DATASETS_OUTPUT_DIR=./datasets`, mapping to the folder where `prefs_dataset` and `sft_dataset` are stored.
 
 2. **Install Requirements**:
    - Ensure Python 3.11 is installed.
