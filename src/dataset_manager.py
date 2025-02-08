@@ -1,5 +1,6 @@
 import logging
-from datasets import Dataset, load_dataset
+from pathlib import Path
+from datasets import Dataset, load_dataset, load_from_disk
 
 
 logger = logging.getLogger(__name__)
@@ -9,7 +10,6 @@ class DatasetManager:
     """
     Loads and prepares datasets for SFT and preference training using harmful and helpful samples.
     """
-
     def __init__(self):
         logger.info("Initializing DatasetManager. Loading datasets...")
         self.harmless_dataset = load_dataset("HuggingFaceH4/cai-conversation-harmless")
@@ -17,7 +17,13 @@ class DatasetManager:
         self.prefs_helpful_dataset = load_dataset("HuggingFaceH4/ultrafeedback_binarized")
         logger.info("Datasets loaded.")
 
-    def get_sft_train_dataset(self, n_samples_harmless, n_samples_helpful, seed=42):
+    def create_sft_train_dataset(
+        self, 
+        n_samples_harmless: int, 
+        n_samples_helpful: int, 
+        seed: int = 42, 
+        store: bool = False, 
+        output_dataset_path: Path = None):
         """
         Returns an SFT training dataset by combining harmless and helpful samples.
 
@@ -25,6 +31,8 @@ class DatasetManager:
             n_samples_harmless (int): Number of harmless samples to use.
             n_samples_helpful (int): Number of helpful samples to use.
             seed (int, optional): Random seed for shuffling. Defaults to 42.
+            store (bool, optional): Stores the created dataset to disk if True. Defaults to False.
+            output_dataset_path (Path, optional): Where is the dataset being stored. Defaults to None.
 
         Returns:
             Dataset: A HuggingFace Dataset with 'input_text' and 'output_text' fields.
@@ -40,12 +48,51 @@ class DatasetManager:
         helpful_inputs = helpful_samples["inputs"]
         helpful_outputs = helpful_samples["outputs"]
         
-        return Dataset.from_dict({
+        sft_dataset = Dataset.from_dict({
             "input_text": harmless_inputs + helpful_inputs,
             "output_text": harmless_outputs + helpful_outputs,
         })
+        
+        if store:
+            sft_dataset.save_to_disk(output_dataset_path)
+        
+        return sft_dataset
 
-    def get_prefs_train_dataset(self, n_samples_harmless, n_samples_helpful, seed=42):
+    def get_sft_train_dataset(
+        self, 
+        n_samples_harmless: int, 
+        n_samples_helpful: int, 
+        seed: int = 42, 
+        load: bool = False, 
+        dataset_path: Path = None):
+        """
+        Returns an SFT training dataset by combining harmless and helpful samples.
+
+        Args:
+            n_samples_harmless (int): Number of harmless samples to use.
+            n_samples_helpful (int): Number of helpful samples to use.
+            seed (int, optional): Random seed for shuffling. Defaults to 42.
+            load (bool, optional): Indicates if dataset will be loaded from dataset_path. Defaults to False.
+            dataset_path (Path, optional): Where the dataset is loaded from, if load=True. Defaults to None.
+
+        Returns:
+            Dataset: A HuggingFace Dataset with 'input_text' and 'output_text' fields.
+        """
+        if load:
+            return load_from_disk(dataset_path)
+        
+        return self.create_sft_train_dataset(
+            n_samples_harmless,
+            n_samples_helpful,
+            seed)
+
+    def create_prefs_train_dataset(
+        self, 
+        n_samples_harmless, 
+        n_samples_helpful, 
+        seed=42, 
+        store: bool = False, 
+        output_dataset_path: Path = None):
         """
         Returns a preference training dataset by combining harmless and helpful samples.
 
@@ -53,6 +100,8 @@ class DatasetManager:
             n_samples_harmless (int): Number of harmless samples to use.
             n_samples_helpful (int): Number of helpful samples to use.
             seed (int, optional): Random seed for shuffling. Defaults to 42.
+            store (bool, optional): Stores the created dataset to disk if True. Defaults to False.
+            output_dataset_path (Path, optional): Where is the dataset being stored. Defaults to None.
 
         Returns:
             Dataset: A HuggingFace Dataset with 'prompt', 'chosen', and 'rejected' fields.
@@ -73,12 +122,44 @@ class DatasetManager:
         helpful_chosen = helpful_samples["outputs"]["chosen"]
         helpful_rejected = helpful_samples["outputs"]["rejected"]
         
-        return Dataset.from_dict({
+        prefs_dataset = Dataset.from_dict({
             "prompt": harmless_inputs + helpful_inputs, 
             "chosen": harmless_chosen + helpful_chosen, 
             "rejected": harmless_rejected + helpful_rejected
         })
+        
+        if store:
+            prefs_dataset.save_to_disk(output_dataset_path)
 
+        return prefs_dataset            
+
+    def get_prefs_train_dataset(
+        self, 
+        n_samples_harmless, 
+        n_samples_helpful, 
+        seed=42, 
+        load: bool = False, 
+        dataset_path: Path = None):
+        """
+        Returns a preference training dataset by combining harmless and helpful samples.
+
+        Args:
+            n_samples_harmless (int): Number of harmless samples to use.
+            n_samples_helpful (int): Number of helpful samples to use.
+            seed (int, optional): Random seed for shuffling. Defaults to 42.
+            load (bool, optional): Indicates if dataset will be loaded from dataset_path. Defaults to False.
+            dataset_path (Path, optional): Where the dataset is loaded from, if load=True. Defaults to None.
+
+        Returns:
+            Dataset: A HuggingFace Dataset with 'prompt', 'chosen', and 'rejected' fields.
+        """
+        if load:
+            return load_from_disk(dataset_path)
+        
+        return self.create_prefs_train_dataset(
+            n_samples_harmless,
+            n_samples_helpful,
+            seed)
 
     def _extract_inputs_and_outputs(self, stage, safeguard, split, n_samples, seed=42):
         """
