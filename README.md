@@ -13,6 +13,8 @@ This repository aims to reproduce Anthropic's [Constitutional AI: Harmlessness f
 
 ## 🚀 Using the Project
 
+### TODO: MISSING THE DATASETS PART
+
 ### 🖥️ Option A: Local Setup
 
 1. **Set Up `.env` File**:
